@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TodoForm from './TodoForm';
+import TodoApp from './TodoApp';
 import './App.css';
 
 class App extends Component {
@@ -7,9 +7,9 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">To Do:</h1>
         </header>
-        <TodoForm/>
+        <TodoApp/>
       </div>
     );
   }

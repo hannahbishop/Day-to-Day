@@ -1,11 +1,18 @@
 import React from 'react';
-import Button from './Button';
 
 const TodoForm = props => {
+  let input;
   return (
     <div>
-      <input type="text"/>
-      <Button label="Add" onClick = ""/>
+      <input ref={node => {
+        input = node;
+      }}/>
+      <button onClick={() => {
+        props.addTodo(input.value);
+        input.value = '';
+      }}>
+        +
+      </button>
     </div>
   );
 };
