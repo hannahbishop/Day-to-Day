@@ -8,6 +8,10 @@ class TodoForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  componentDidMount(){
+    this.textInput.focus();
+  }
+
   handleChange(e) {
     this.setState({value: e.target.value});
   }
@@ -21,7 +25,11 @@ class TodoForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <input value={this.state.value} onChange={this.handleChange} type="text"></input>
+        <input
+          ref={(input) => { this.textInput = input; }}
+          value={this.state.value}
+          onChange={this.handleChange}
+          type="text"></input>
         <input type="submit" value="Add" />
       </form>
     )

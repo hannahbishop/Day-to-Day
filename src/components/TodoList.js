@@ -5,7 +5,12 @@ const TodoList = (props) => {
   const todoNode = props.todos.map((todo) => {
     return (<TodoCard todo = { todo } key = { todo.id } removeTodo = { props.removeTodo }/>)
   });
-  return (<ul>{todoNode}</ul>);
+  return (
+    <div>
+      <h2>{props.title}</h2>
+      <ul>{todoNode}</ul>
+    </div>
+  );
 }
 
 export default TodoList;
