@@ -3,11 +3,10 @@ import Todo from './Todo';
 
 const TodoCard = (props) => {
   return(
-    <div class="todo-card">
+    <div className="todo-card">
       <Todo
         todo = { props.todo }
-        key = { props.todo }
-        removeTodo = { props.removeTodo }
+        completeTodo = { props.completeTodo }
       />
     </div>
   )

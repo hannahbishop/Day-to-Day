@@ -14,18 +14,21 @@ class TodoApp extends React.Component {
 
   addTodo(val) {
     if (val !== '') {
-      const todo = { text: val, id: id++ }
+      const todo = { text: val, isComplete: 0, id: id++ }
       this.state.data.push(todo);
       this.setState({ data: this.state.data });
     }
   }
 
-  removeTodo(id) {
-   const remaining = this.state.data.filter((todo) => {
-     if(todo.id !== id) return todo;
-   });
-   this.setState({ data: remaining });
- }
+  completeTodo(id) {
+    const remaining = this.state.data.filter((todo) => {
+      if(todo.id === id) {
+        todo.isComplete = !todo.isComplete;
+      }
+      return todo;
+    });
+    this.setState({ data: remaining });
+  }
 
   render() {
     return (
@@ -33,7 +36,7 @@ class TodoApp extends React.Component {
         <TodoForm addTodo = { this.addTodo.bind(this) }/>
         <TodoList
           todos = { this.state.data }
-          removeTodo = { this.removeTodo.bind(this) }
+          completeTodo = { this.completeTodo.bind(this) }
         />
       </div>
     );

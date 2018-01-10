@@ -6,7 +6,12 @@
   display: inline;
 }
 
-.todo_rmv {
-  display: inline;
-  margin-right: 0.5rem;
+.todo_check {
+  height: 1rem;
+  width: 1rem;
+  border-radius: 0.2rem;
+}
+
+.todo_check--complete {
+  background: gray;
 }

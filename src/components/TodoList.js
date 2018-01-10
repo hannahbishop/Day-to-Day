@@ -3,7 +3,13 @@ import TodoCard from './TodoCard';
 
 const TodoList = (props) => {
   const todoNode = props.todos.map((todo) => {
-    return (<TodoCard todo = { todo } key = { todo.id } removeTodo = { props.removeTodo }/>)
+    return (
+      <TodoCard
+        todo = { todo }
+        key = { todo.id }
+        completeTodo = { props.completeTodo }
+      />
+    )
   });
   return (
     <div>
