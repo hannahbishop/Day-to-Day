@@ -1,0 +1,12 @@
+.todo-form {
+  height: 2rem;
+  width: 100%;
+  font-size: 1.8rem;
+  font-weight: bold;
+  padding: 0.5rem;
+  border: none;
+  border-bottom: solid 1px gray;
+  &::placeholder {
+    color: lightgray;
+  }
+}
