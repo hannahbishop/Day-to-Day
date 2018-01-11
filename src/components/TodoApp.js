@@ -9,7 +9,7 @@ class TodoApp extends React.Component {
     super(props);
     this.state = {
       data: []
-    }
+    };
   }
 
   addTodo(val) {

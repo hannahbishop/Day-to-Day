@@ -1,5 +1,11 @@
 import React from 'react';
 import TodoCard from './TodoCard';
+import PropTypes from 'prop-types';
+
+const propTypes = {
+  todos: PropTypes.object.isRequired,
+  completeTodo: PropTypes.funct,
+};
 
 const TodoList = (props) => {
   const todoNode = props.todos.map((todo) => {
@@ -11,12 +17,12 @@ const TodoList = (props) => {
       />
     )
   });
+
   return (
     <div>
-      <h2>{props.title}</h2>
       <ul>{todoNode}</ul>
     </div>
   );
-}
+};
 
 export default TodoList;
