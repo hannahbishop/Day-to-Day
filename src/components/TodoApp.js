@@ -1,6 +1,5 @@
 import React from 'react';
-import TodoForm from './TodoForm';
-import TodoList from './TodoList';
+import TodoPanel from './TodoPanel';
 
 let id = 0;
 class TodoApp extends React.Component {
@@ -20,7 +19,7 @@ class TodoApp extends React.Component {
     }
   }
 
-  completeTodo(id) {
+  handleCheckbox(id) {
     const remaining = this.state.data.filter((todo) => {
       if(todo.id === id) {
         todo.isComplete = !todo.isComplete;
@@ -32,13 +31,11 @@ class TodoApp extends React.Component {
 
   render() {
     return (
-      <div>
-        <TodoForm addTodo = { this.addTodo.bind(this) }/>
-        <TodoList
-          todos = { this.state.data }
-          completeTodo = { this.completeTodo.bind(this) }
-        />
-      </div>
+      <TodoPanel
+        todos = { this.state.data }
+        addTodo = { this.addTodo.bind(this) }
+        handleCheckbox = { this.handleCheckbox.bind(this) }
+      />
     );
   }
 }

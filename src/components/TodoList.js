@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const propTypes = {
   todos: PropTypes.object.isRequired,
-  completeTodo: PropTypes.funct,
+  handleCheckbox: PropTypes.func.isRequired,
 };
 
 const TodoList = (props) => {
@@ -13,7 +13,7 @@ const TodoList = (props) => {
       <TodoCard
         todo = { todo }
         key = { todo.id }
-        completeTodo = { props.completeTodo }
+        handleCheckbox = { props.handleCheckbox }
       />
     )
   });

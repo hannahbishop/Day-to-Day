@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const propTypes = {
   todo: PropTypes.object.isRequired,
-  completeTodo: PropTypes.funct,
+  handleCheckbox: PropTypes.func.isRequired,
 };
 
 const TodoCard = (props) => {
@@ -19,7 +19,7 @@ const TodoCard = (props) => {
           "todo_check " +
           (isComplete ? 'todo_check--complete' : 'todo_check--incomplete')
         }
-        onClick = { () => { props.completeTodo(props.todo.id) }
+        onClick = { () => { props.handleCheckbox(props.todo.id) }
       }></button>
       <p className="todo_text"> { props.todo.text } </p>
     </li>
