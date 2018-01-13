@@ -19,7 +19,7 @@ const TodoCard = (props) => {
           "todo_check " +
           (isComplete ? 'todo_check--complete' : 'todo_check--incomplete')
         }
-        onClick = { () => { props.handleCheckbox(props.todo.id) }
+        onClick = { () => { props.handleCheckbox(props.todo.id, false) }
       }></button>
       <p className="todo_text"> { props.todo.text } </p>
     </li>
