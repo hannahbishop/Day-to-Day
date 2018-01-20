@@ -11,17 +11,24 @@ const TodoCard = (props) => {
   return(
     <li
       className = {
-        "todo-card" +
-        isComplete ? 'todo--complete' : 'todo--incomplete' }
+        "todo-card " +
+        (isComplete ? "todo--complete" : "todo--incomplete" )
+      }
     >
       <button
         className = {
           "todo_check " +
-          (isComplete ? 'todo_check--complete' : 'todo_check--incomplete')
+          (isComplete ? "todo_check--complete" : "todo_check--incomplete")
         }
         onClick = { () => { props.handleCheckbox(props.todo.id, false) }
       }></button>
       <p className="todo_text"> { props.todo.text } </p>
+      <button
+        className = "todo_delete"
+        onClick = { () => {
+          props.removeTodo(props.todo.id)
+        }
+      }>X</button>
     </li>
   )
 }

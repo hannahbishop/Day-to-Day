@@ -1,7 +1,19 @@
 .todo-card {
-  max-width: 300px;
   padding: 1rem;
   margin: 1rem;
   background: white;
   border: gray solid 1px;
+}
+
+.todo_delete {
+  float: right;
+  vertical-align: middle;
+}
+
+.todo_text {
+  vertical-align: middle;
+}
+
+.todo_check {
+  vertical-align: middle;
 }

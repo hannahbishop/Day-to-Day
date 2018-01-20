@@ -28,14 +28,16 @@ const TodoPanel = (props) => {
     <div>
       <TodoForm addTodo = { props.addTodo }/>
       <TodoList
-        className = "todolist--incomplete"
+        className = "todo-list todo-list--incomplete"
         todos = {findIncomplete()}
-        handleCheckbox = { props.handleCheckbox }
+        handleCheckbox = {props.handleCheckbox}
+        removeTodo = {props.removeTodo}
       />
       <TodoList
-        className = "todolist--completed"
+        className = "todo-list todo-list--complete"
         todos = {findComplete()}
-        handleCheckbox = { props.handleCheckbox }
+        handleCheckbox = {props.handleCheckbox}
+        removeTodo = {props.removeTodo}
       />
     </div>
   )

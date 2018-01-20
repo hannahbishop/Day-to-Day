@@ -12,7 +12,8 @@ class TodoApp extends React.Component {
       data: localData || []
     };
     this.addTodo = this.addTodo.bind(this);
-		this.handleCheckbox = this.handleCheckbox.bind(this);
+    this.handleCheckbox = this.handleCheckbox.bind(this);
+    this.removeTodo = this.removeTodo.bind(this);
   }
 
 	updateLocalStorage() {
@@ -46,6 +47,20 @@ class TodoApp extends React.Component {
         window.id++;
       }
     }
+  }
+
+  removeTodo(id) {
+    const remaining = this.state.data.filter((todo) => {
+      if(todo.id !== id) {
+        return todo;
+      }
+    });
+    this.state.data = remaining;
+    this.setState({
+      data: this.state.data
+    }, () => {
+      this.updateLocalStorage();
+    });
   }
 
   handleCheckbox(id) {
@@ -84,6 +99,7 @@ class TodoApp extends React.Component {
         todos = {this.state.data}
         addTodo = {this.addTodo}
         handleCheckbox = {this.handleCheckbox}
+        removeTodo = {this.removeTodo}
       />
     );
   }

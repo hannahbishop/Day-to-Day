@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
   todos: PropTypes.object.isRequired,
   handleCheckbox: PropTypes.func.isRequired,
+  className: PropTypes.string.isRequired
 };
 
 const TodoList = (props) => {
@@ -13,15 +14,14 @@ const TodoList = (props) => {
       <TodoCard
         todo = { todo }
         key = { todo.id }
-        handleCheckbox = { props.handleCheckbox }
+        handleCheckbox = {props.handleCheckbox}
+        removeTodo = {props.removeTodo}
       />
     )
   });
 
   return (
-    <div>
-      <ul>{todoNode}</ul>
-    </div>
+    <ul className={props.className}>{todoNode}</ul>
   );
 };
 
