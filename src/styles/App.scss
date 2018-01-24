@@ -1,8 +1,7 @@
+@import 'modules/all';
+
 @import 'partials/base';
 
 @import 'partials/reset';
 
-@import 'partials/todo';
-@import 'partials/todocard';
-@import 'partials/todoform';
-@import 'partials/todolist';
+@import 'partials/todoapp/_todoapp_all.scss';

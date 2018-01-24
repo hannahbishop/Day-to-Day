@@ -20,18 +20,19 @@ class TodoApp extends React.Component {
 		if (typeof(Storage) !== "undefined")
 			localStorage.setItem("todos", JSON.stringify(this.state.data));
   }
-  
-  addTodo(val, isComplete) {
+
+  addTodo(val, isComplete, panelID) {
     if (val !== '') {
       let id;
       if (typeof(Storage) !== "undefined") {
-        id = parseInt(localStorage.getItem("count"));
+        id = parseInt(localStorage.getItem("count"), 10);
       } else {
         id = window.id;
       }
-      const todo = { 
-        text: val, 
-        isComplete: isComplete, 
+      const todo = {
+        text: val,
+        isComplete: isComplete,
+        panelID: panelID,
         id: id
       }
       this.state.data.unshift(todo);
@@ -50,14 +51,9 @@ class TodoApp extends React.Component {
   }
 
   removeTodo(id) {
-    const remaining = this.state.data.filter((todo) => {
-      if(todo.id !== id) {
-        return todo;
-      }
-    });
-    this.state.data = remaining;
+    const remaining = this.state.data.filter(todo => todo.id !== id);
     this.setState({
-      data: this.state.data
+      data: remaining
     }, () => {
       this.updateLocalStorage();
     });
@@ -65,12 +61,8 @@ class TodoApp extends React.Component {
 
   handleCheckbox(id) {
     let toAdd = [];
-    toAdd = this.state.data.filter((todo) => {
-      if(todo.id === id) {
-        return todo;
-      }
-    });
-    toAdd.map((todo) => {
+    toAdd = this.state.data.filter(todo => todo.id === id);
+    toAdd.forEach((todo) => {
       todo.isComplete = !todo.isComplete;
       this.state.data.splice(0, 0, this.state.data.splice(this.state.data.indexOf(todo), 1)[0]);
       this.setState({
@@ -79,6 +71,20 @@ class TodoApp extends React.Component {
         this.updateLocalStorage();
       });
     });
+  }
+
+  renderPanels() {
+    return [...Array(this.props.panels)].map((u, i) => (
+        <li className = "todo-panel">
+          <TodoPanel
+            id = {i}
+            todos = {this.state.data}
+            addTodo = {this.addTodo}
+            handleCheckbox = {this.handleCheckbox}
+            removeTodo = {this.removeTodo}
+          />
+        </li>
+      ));
   }
 
   componentDidMount() {
@@ -94,13 +100,9 @@ class TodoApp extends React.Component {
   }
 
   render() {
+    const panelNode = this.renderPanels()
     return (
-      <TodoPanel
-        todos = {this.state.data}
-        addTodo = {this.addTodo}
-        handleCheckbox = {this.handleCheckbox}
-        removeTodo = {this.removeTodo}
-      />
+      <ul className = "todo-app">{panelNode}</ul>
     );
   }
 }

@@ -3,44 +3,42 @@ import TodoList from './TodoList';
 import TodoForm from './TodoForm';
 import PropTypes from 'prop-types';
 
-const TodoPanel = (props) => {
-  const findComplete = () => {
-    let complete = [];
-    props.todos.map((todo) => {
-      if(todo.isComplete) {
-        complete.push(todo);
-      }
-    })
-    return complete;
-  };
+const propTypes = {
+  todos: PropTypes.array.isRequired,
+  handleCheckbox: PropTypes.func.isRequired,
+  removeTodo: PropTypes.func.isRequired,
+  addTodo: PropTypes.func.isRequired,
+  id: PropTypes.number.isRequired
+};
 
-  const findIncomplete = () => {
-    let incomplete = [];
-    props.todos.map((todo) => {
-      if(!todo.isComplete) {
-        incomplete.push(todo);
-      }
-    })
-    return incomplete;
-  };
-//Todo: Instead of interating twice, run a filter on props.todos that removes incomplete todos and unshifts them onto the top of their own array.
+const TodoPanel = (props) => {
+  const complete = props.todos
+    .filter(todo => (todo.panelID === props.id && todo.isComplete));
+  const incomplete = props.todos
+    .filter(todo => (todo.panelID === props.id && !todo.isComplete));
   return (
     <div>
-      <TodoForm addTodo = { props.addTodo }/>
-      <TodoList
-        className = "todo-list todo-list--incomplete"
-        todos = {findIncomplete()}
-        handleCheckbox = {props.handleCheckbox}
-        removeTodo = {props.removeTodo}
-      />
-      <TodoList
-        className = "todo-list todo-list--complete"
-        todos = {findComplete()}
-        handleCheckbox = {props.handleCheckbox}
-        removeTodo = {props.removeTodo}
-      />
+      <TodoForm 
+        addTodo = {props.addTodo}
+        panelID = {props.id}/>
+      <div className = "todo-list__view">
+        <TodoList
+          className = "todo-list todo-list--incomplete"
+          todos = {incomplete}
+          handleCheckbox = {props.handleCheckbox}
+          removeTodo = {props.removeTodo}
+        />
+        <TodoList
+          className = "todo-list todo-list--complete"
+          todos = {complete}
+          handleCheckbox = {props.handleCheckbox}
+          removeTodo = {props.removeTodo}
+        />
+      </div>
     </div>
   )
 };
+
+TodoPanel.propTypes = propTypes;
 
 export default TodoPanel;

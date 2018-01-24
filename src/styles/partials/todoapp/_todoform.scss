@@ -1,7 +1,8 @@
 .todo-form {
-  height: 2rem;
+  height: $todo-form--height;
   width: 100%;
-  font-size: 1.8rem;
+  box-sizing: border-box;
+  font-size: 1.9rem;
   font-weight: bold;
   padding: 0.5rem;
   border: none;

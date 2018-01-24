@@ -3,11 +3,15 @@ import TodoApp from './TodoApp';
 import '../styles/App.css';
 
 class App extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.state = {panels: 2};
+  }
+
   render() {
     return (
-      <div className="App">
-        <TodoApp/>
-      </div>
+      <TodoApp panels = {this.state.panels}/>
     );
   }
 }

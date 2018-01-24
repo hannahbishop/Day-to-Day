@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
   todo: PropTypes.object.isRequired,
   handleCheckbox: PropTypes.func.isRequired,
+  removeTodo: PropTypes.func.isRequired
 };
 
 const TodoCard = (props) => {
