@@ -14,6 +14,7 @@ class TodoApp extends React.Component {
     this.addTodo = this.addTodo.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
+    this.swapPanel = this.swapPanel.bind(this);
   }
 
 	updateLocalStorage() {
@@ -64,13 +65,26 @@ class TodoApp extends React.Component {
     toAdd = this.state.data.filter(todo => todo.id === id);
     toAdd.forEach((todo) => {
       todo.isComplete = !todo.isComplete;
-      this.state.data.splice(0, 0, this.state.data.splice(this.state.data.indexOf(todo), 1)[0]);
-      this.setState({
-        data: this.state.data
-      }, () => {
-        this.updateLocalStorage();
-      });
+      this.state.data
+        .splice(0, 0, this.state.data
+          .splice(this.state.data.indexOf(todo), 1)[0]);
+      this.setState(
+        {data: this.state.data}, 
+        () => (this.updateLocalStorage())
+      );
     });
+  }
+
+  swapPanel(id) {
+    const swapped = this.state.data
+      .map((todo) => {
+        if (todo.id === id) { todo.panelID = 1 - todo.panelID }
+        return todo;
+      });
+    this.setState(
+      {data: swapped},
+      () => (this.updateLocalStorage())
+    );
   }
 
   renderPanels() {
@@ -82,6 +96,7 @@ class TodoApp extends React.Component {
             addTodo = {this.addTodo}
             handleCheckbox = {this.handleCheckbox}
             removeTodo = {this.removeTodo}
+            swapPanel = {this.swapPanel}
           />
         </li>
       ));

@@ -6,7 +6,8 @@ const propTypes = {
   todos: PropTypes.array.isRequired,
   handleCheckbox: PropTypes.func.isRequired,
   removeTodo: PropTypes.func.isRequired,
-  className: PropTypes.string.isRequired
+  className: PropTypes.string.isRequired,
+  swapPanel: PropTypes.func.isRequired
 };
 
 const TodoList = (props) => {
@@ -17,6 +18,7 @@ const TodoList = (props) => {
         key = { todo.id }
         handleCheckbox = {props.handleCheckbox}
         removeTodo = {props.removeTodo}
+        swapPanel = {props.swapPanel}
       />
     )
   });

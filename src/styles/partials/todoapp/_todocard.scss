@@ -1,19 +1,31 @@
-.todo-card {
+.todo__card {
   padding: 1rem;
   margin: 1rem;
   background: white;
   border: gray solid 1px;
 }
 
-.todo_delete {
+.todo__text {
+  vertical-align: middle;
+  display: inline;
+}
+
+.todo__check {
+  height: 1rem;
+  width: 1rem;
+  vertical-align: middle;
+  border-radius: 0.2rem;
+}
+
+.todo__check--complete {
+  background: gray;
+}
+
+.todo__delete {
   float: right;
   vertical-align: middle;
 }
 
-.todo_text {
-  vertical-align: middle;
-}
-
-.todo_check {
-  vertical-align: middle;
+.todo__swap-panel {
+  margin: 0 2rem;
 }

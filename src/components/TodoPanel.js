@@ -8,6 +8,7 @@ const propTypes = {
   handleCheckbox: PropTypes.func.isRequired,
   removeTodo: PropTypes.func.isRequired,
   addTodo: PropTypes.func.isRequired,
+  swapPanel: PropTypes.func.isRequired,
   id: PropTypes.number.isRequired
 };
 
@@ -27,12 +28,14 @@ const TodoPanel = (props) => {
           todos = {incomplete}
           handleCheckbox = {props.handleCheckbox}
           removeTodo = {props.removeTodo}
+          swapPanel = {props.swapPanel}
         />
         <TodoList
           className = "todo-list todo-list--complete"
           todos = {complete}
           handleCheckbox = {props.handleCheckbox}
           removeTodo = {props.removeTodo}
+          swapPanel = {props.swapPanel}
         />
       </div>
     </div>

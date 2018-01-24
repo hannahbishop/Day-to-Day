@@ -4,32 +4,42 @@ import PropTypes from 'prop-types';
 const propTypes = {
   todo: PropTypes.object.isRequired,
   handleCheckbox: PropTypes.func.isRequired,
-  removeTodo: PropTypes.func.isRequired
+  removeTodo: PropTypes.func.isRequired,
+  swapPanel: PropTypes.func.isRequired,
 };
 
 const TodoCard = (props) => {
   let isComplete = props.todo.isComplete;
+  const handleCheckbox = () => {
+    props.handleCheckbox(props.todo.id, false);
+  };
+  const swapPanel = () => {
+    props.swapPanel(props.todo.id, props.todo.panelID)
+  };
+  const removeTodo = () => {
+    props.removeTodo(props.todo.id)
+  };
   return(
     <li
       className = {
-        "todo-card " +
+        "todo__card " +
         (isComplete ? "todo--complete" : "todo--incomplete" )
       }
     >
       <button
         className = {
-          "todo_check " +
-          (isComplete ? "todo_check--complete" : "todo_check--incomplete")
+          "todo__check " +
+          (isComplete ? "todo__check--complete" : "todo__check--incomplete")
         }
-        onClick = { () => { props.handleCheckbox(props.todo.id, false) }
-      }></button>
-      <p className="todo_text"> { props.todo.text } </p>
+        onClick = {handleCheckbox}
+      ></button>
+      <p className="todo__text"> {props.todo.text} </p>
+      <button 
+        className = "todo__swap-panel"
+        onClick = {swapPanel}>Swap</button>
       <button
-        className = "todo_delete"
-        onClick = { () => {
-          props.removeTodo(props.todo.id)
-        }
-      }>X</button>
+        className = "todo__delete"
+        onClick = {removeTodo}>X</button>
     </li>
   )
 }
