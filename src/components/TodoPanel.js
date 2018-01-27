@@ -14,60 +14,35 @@ const propTypes = {
 };
 
 const TodoPanel = props => {
-  const complete = props.todos
-    .filter(todo => (todo.panelID === props.id && todo.isComplete));
-  const incomplete = props.todos
-    .filter(todo => (todo.panelID === props.id && !todo.isComplete));
+  const viewNode = props.panel.lists.map((list, i) => {
+    return(
+      <Droppable droppableId={list.id.toString()}>
+        {(provided, snapshot) => (
+          <div ref={provided.innerRef}>
+            <TodoList
+              className = "todo-list"
+              todos = {list.todos}
+              handleCheckbox = {props.handleCheckbox}
+              removeTodo = {props.removeTodo}
+              swapPanel = {props.swapPanel}
+            />
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    )
+  });
+
   return (
     <div>
       <TodoForm 
         addTodo = {props.addTodo}
-        panelID = {props.id}/>
-        <div className = "todo-list__view">
-          <Droppable droppableId={props.id.toString() + ".0" }>
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef}>
-                <TodoList
-                  className = "todo-list todo-list--incomplete"
-                  todos = {incomplete}
-                  handleCheckbox = {props.handleCheckbox}
-                  removeTodo = {props.removeTodo}
-                  swapPanel = {props.swapPanel}
-                />
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-          <Droppable droppableId={props.id.toString() + ".1" }>
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef}>
-                <TodoList
-                  className = "todo-list todo-list--complete"
-                  todos = {complete}
-                  handleCheckbox = {props.handleCheckbox}
-                  removeTodo = {props.removeTodo}
-                  swapPanel = {props.swapPanel}
-                />
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-      </div>
+        panelID = {props.id}
+      />
+      <div className = "todo-list__view">{viewNode}</div>
     </div>
   )
 };
-
-<Droppable droppableId="droppable-1" type="PERSON">
-  {(provided, snapshot) => (
-    <div
-      ref={provided.innerRef}
-      style={{ backgroundColor: snapshot.isDraggingOver ? 'blue' : 'grey' }}
-    >
-      <h2>I am a droppable!</h2>
-      {provided.placeholder}
-    </div>
-  )}
-</Droppable>;
 
 TodoPanel.propTypes = propTypes;
 

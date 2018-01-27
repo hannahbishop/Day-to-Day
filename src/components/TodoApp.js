@@ -8,7 +8,64 @@ class TodoApp extends React.Component {
     super(props);
     const localData = JSON.parse(localStorage.getItem("todos"));
     this.state = {
-      data: localData || []
+      data: localData || {
+        "panels": [
+          {
+            "id": 0,
+            "lists": [
+              {
+                "id": 0,
+                "todos": [
+                  { "id": 0,
+                    "text": "todo #0"
+                  },
+                  { "id": 1,
+                    "text": "todo #1"
+                  }
+                ]
+              },
+              {
+                "id": 1,
+                "todos": [
+                  { "id": 2,
+                    "text": "todo #2"
+                  },
+                  { "id": 3,
+                    "text": "todo #3"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 1,
+            "lists": [
+              {
+                "id": 2,
+                "todos": [
+                  { "id": 4,
+                    "text": "todo #4"
+                  },
+                  { "id": 5,
+                    "text": "todo #5"
+                  }
+                ]
+              },
+              {
+                "id": 3,
+                "todos": [
+                  { "id": 6,
+                    "text": "todo #6"
+                  },
+                  { "id": 7,
+                    "text": "todo #7"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
     };
     this.addTodo = this.addTodo.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
@@ -22,7 +79,7 @@ class TodoApp extends React.Component {
     if (!result.destination) {
       return;
     }
-    alert("source: " + result.source.index + " dest: " + result.destination.index);
+    //alert("source: " + result.source.index + " dest: " + result.destination.index);
   }
 
 	updateLocalStorage() {
@@ -96,11 +153,10 @@ class TodoApp extends React.Component {
   }
 
   renderPanels() {
-    return [...Array(this.props.panels)].map((u, i) => (
+    return this.state.data.panels.map((panel, i) => (
         <li className = "todo-panel">
           <TodoPanel
-            id = {i}
-            todos = {this.state.data}
+            panel = {this.state.data.panels[i]}
             addTodo = {this.addTodo}
             handleCheckbox = {this.handleCheckbox}
             removeTodo = {this.removeTodo}

@@ -12,9 +12,9 @@ const propTypes = {
 };
 
 const TodoList = (props) => {
-  const todoNode = props.todos.map((todo, index) => {
+  const todoNode = props.todos.map((todo, i) => {
     return (
-      <Draggable draggableId={todo.id} key={todo.id} index={index}> 
+      <Draggable draggableId={todo.id} key={todo.id} index={i}> 
         {(provided, snapshot) => (
           <div>
             <div
