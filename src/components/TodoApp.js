@@ -17,10 +17,12 @@ class TodoApp extends React.Component {
                 "id": 0,
                 "todos": [
                   { "id": 0,
-                    "text": "todo #0"
+                    "text": "todo #0",
+                    "isComplete": 1
                   },
                   { "id": 1,
-                    "text": "todo #1"
+                    "text": "todo #1",
+                    "isComplete": 1
                   }
                 ]
               },
@@ -28,10 +30,12 @@ class TodoApp extends React.Component {
                 "id": 1,
                 "todos": [
                   { "id": 2,
-                    "text": "todo #2"
+                    "text": "todo #2",
+                    "isComplete": 1
                   },
                   { "id": 3,
-                    "text": "todo #3"
+                    "text": "todo #3",
+                    "isComplete": 1
                   }
                 ]
               }
@@ -44,10 +48,12 @@ class TodoApp extends React.Component {
                 "id": 2,
                 "todos": [
                   { "id": 4,
-                    "text": "todo #4"
+                    "text": "todo #4",
+                    "isComplete": 1
                   },
                   { "id": 5,
-                    "text": "todo #5"
+                    "text": "todo #5",
+                    "isComplete": 1
                   }
                 ]
               },
@@ -55,10 +61,12 @@ class TodoApp extends React.Component {
                 "id": 3,
                 "todos": [
                   { "id": 6,
-                    "text": "todo #6"
+                    "text": "todo #6",
+                    "isComplete": 1
                   },
                   { "id": 7,
-                    "text": "todo #7"
+                    "text": "todo #7",
+                    "isComplete": 1
                   }
                 ]
               }
@@ -87,7 +95,7 @@ class TodoApp extends React.Component {
 			localStorage.setItem("todos", JSON.stringify(this.state.data));
   }
 
-  addTodo(val, isComplete, panelID) {
+  addTodo(val, panel) {
     if (val !== '') {
       let id;
       if (typeof(Storage) !== "undefined") {
@@ -97,16 +105,14 @@ class TodoApp extends React.Component {
       }
       const todo = {
         text: val,
-        isComplete: isComplete,
-        panelID: panelID,
+        isComplete: 0,
         id: id
       }
-      this.state.data.unshift(todo);
-      this.setState({
-        data: this.state.data
-      }, () => {
-        this.updateLocalStorage();
-      });
+      this.state.data.panels[panel].lists[0].todos.unshift(todo);
+      this.setState(
+        {data: this.state.data}, 
+        () => {this.updateLocalStorage();}
+      );
       if (typeof(Storage) !== "undefined") {
         id++;
         localStorage.setItem("count", String(id));
@@ -116,13 +122,14 @@ class TodoApp extends React.Component {
     }
   }
 
-  removeTodo(id) {
-    const remaining = this.state.data.filter(todo => todo.id !== id);
-    this.setState({
-      data: remaining
-    }, () => {
-      this.updateLocalStorage();
-    });
+  removeTodo(todoId, list, panel) {
+    const remaining = this.state.data.panels[panel].lists[list].todos
+      .filter(todo => todo.id !== todoId);
+    this.state.data.panels[panel].lists[list].todos = remaining;
+    this.setState(
+      {data: this.state.data}, 
+      () => {this.updateLocalStorage();}
+    );
   }
 
   handleCheckbox(id) {
@@ -140,15 +147,22 @@ class TodoApp extends React.Component {
     });
   }
 
-  swapPanel(id) {
-    const swapped = this.state.data
-      .map((todo) => {
-        if (todo.id === id) { todo.panelID = 1 - todo.panelID }
-        return todo;
-      });
+  swapPanel(todoId, list, panel) {
+    const newTodo = this.state.data.panels[panel].lists[list].todos
+      .filter(todo => todo.id === todoId)[0];
+
+    //add to new panel
+    this.state.data.panels[1-panel].lists[list].todos
+      .unshift(newTodo);
+
+    //remove from panel
+    const remaining = this.state.data.panels[panel].lists[list].todos
+      .filter(todo => todo.id !== todoId);
+    this.state.data.panels[panel].lists[list].todos = remaining;
+
     this.setState(
-      {data: swapped},
-      () => (this.updateLocalStorage())
+      {data: this.state.data}, 
+      () => {this.updateLocalStorage()}
     );
   }
 
@@ -156,7 +170,8 @@ class TodoApp extends React.Component {
     return this.state.data.panels.map((panel, i) => (
         <li className = "todo-panel">
           <TodoPanel
-            panel = {this.state.data.panels[i]}
+            lists = {this.state.data.panels[i].lists}
+            id = {i}
             addTodo = {this.addTodo}
             handleCheckbox = {this.handleCheckbox}
             removeTodo = {this.removeTodo}
@@ -170,22 +185,21 @@ class TodoApp extends React.Component {
 		if (typeof(Storage) !== "undefined") {
 			localStorage.setItem("todos", JSON.stringify(this.state.data));
       if(!localStorage.getItem("count")) {
-        localStorage.setItem("count", "0");
+        localStorage.setItem("count", "8");
       }
 		} else {
 			 console.log("App will not remember todos between sessions");
-			window.id = 0;
+			window.id = 8;
 		}
   }
 
   render() {
-    const panelNode = this.renderPanels()
     return (
       <DragDropContext
         onDragStart={this.onDragStart}
         onDragEnd={this.onDragEnd}
       >
-        <ul className = "todo-app">{panelNode}</ul>
+        <ul className = "todo-app">{this.renderPanels()}</ul>
       </DragDropContext>
     );
   }

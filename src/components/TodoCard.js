@@ -14,7 +14,7 @@ const TodoCard = (props) => {
     props.handleCheckbox(props.todo.id, false);
   };
   const swapPanel = () => {
-    props.swapPanel(props.todo.id, props.todo.panelID)
+    props.swapPanel(props.todo.id)
   };
   const removeTodo = () => {
     props.removeTodo(props.todo.id)

@@ -4,17 +4,26 @@ import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 
 const propTypes = {
-  todos: PropTypes.array.isRequired,
-  handleCheckbox: PropTypes.func.isRequired,
-  removeTodo: PropTypes.func.isRequired,
   className: PropTypes.string.isRequired,
+  todos: PropTypes.array.isRequired,
+  removeTodo: PropTypes.func.isRequired,
+  handleCheckbox: PropTypes.func.isRequired,
   swapPanel: PropTypes.func.isRequired
 };
 
 const TodoList = (props) => {
+  const removeTodo = (todoId) => {
+    props.removeTodo(todoId, props.index)
+  };
+  const handleCheckbox = (todoId) => {
+    props.handleCheckbox(todoId, props.index)
+  };
+  const swapPanel = (todoId) => {
+    props.swapPanel(todoId, props.index)
+  };
   const todoNode = props.todos.map((todo, i) => {
     return (
-      <Draggable draggableId={todo.id} key={todo.id} index={i}> 
+      <Draggable draggableId={todo.id.toString()} key={todo.id} index={i}> 
         {(provided, snapshot) => (
           <div>
             <div
@@ -24,9 +33,9 @@ const TodoList = (props) => {
             >
               <TodoCard
                 todo = {todo}
-                handleCheckbox = {props.handleCheckbox}
-                removeTodo = {props.removeTodo}
-                swapPanel = {props.swapPanel}
+                handleCheckbox = {handleCheckbox}
+                removeTodo = {removeTodo}
+                swapPanel = {swapPanel}
               />
             </div>
             {provided.placeholder}

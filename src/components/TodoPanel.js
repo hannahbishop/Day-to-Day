@@ -7,14 +7,26 @@ import PropTypes from 'prop-types';
 const propTypes = {
   todos: PropTypes.array.isRequired,
   id: PropTypes.number.isRequired,
-  handleCheckbox: PropTypes.func.isRequired,
-  removeTodo: PropTypes.func.isRequired,
   addTodo: PropTypes.func.isRequired,
+  removeTodo: PropTypes.func.isRequired,
+  handleCheckbox: PropTypes.func.isRequired,
   swapPanel: PropTypes.func.isRequired
 };
 
 const TodoPanel = props => {
-  const viewNode = props.panel.lists.map((list, i) => {
+  const addTodo = (value) => {
+    props.addTodo(value, props.id);
+  }
+  const removeTodo = (todoId, list) => {
+    props.removeTodo(todoId, list, props.id);
+  }
+  const handleCheckbox = (todoId, list) => {
+    props.handleCheckbox(todoId, list, props.id);
+  }
+  const swapPanel = (todoId, list) => {
+    props.swapPanel(todoId, list, props.id);
+  }
+  const viewNode = props.lists.map((list, i) => {
     return(
       <Droppable droppableId={list.id.toString()}>
         {(provided, snapshot) => (
@@ -22,9 +34,10 @@ const TodoPanel = props => {
             <TodoList
               className = "todo-list"
               todos = {list.todos}
-              handleCheckbox = {props.handleCheckbox}
-              removeTodo = {props.removeTodo}
-              swapPanel = {props.swapPanel}
+              index = {i}
+              handleCheckbox = {handleCheckbox}
+              removeTodo = {removeTodo}
+              swapPanel = {swapPanel}
             />
             {provided.placeholder}
           </div>
@@ -36,7 +49,7 @@ const TodoPanel = props => {
   return (
     <div>
       <TodoForm 
-        addTodo = {props.addTodo}
+        addTodo = {addTodo}
         panelID = {props.id}
       />
       <div className = "todo-list__view">{viewNode}</div>
