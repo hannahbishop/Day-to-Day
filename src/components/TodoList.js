@@ -1,6 +1,7 @@
 import React from 'react';
 import TodoCard from './TodoCard';
 import PropTypes from 'prop-types';
+import { Draggable } from 'react-beautiful-dnd';
 
 const propTypes = {
   todos: PropTypes.array.isRequired,
@@ -11,15 +12,27 @@ const propTypes = {
 };
 
 const TodoList = (props) => {
-  const todoNode = props.todos.map((todo) => {
+  const todoNode = props.todos.map((todo, index) => {
     return (
-      <TodoCard
-        todo = { todo }
-        key = { todo.id }
-        handleCheckbox = {props.handleCheckbox}
-        removeTodo = {props.removeTodo}
-        swapPanel = {props.swapPanel}
-      />
+      <Draggable draggableId={todo.id} key={todo.id} index={index}> 
+        {(provided, snapshot) => (
+          <div>
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              <TodoCard
+                todo = {todo}
+                handleCheckbox = {props.handleCheckbox}
+                removeTodo = {props.removeTodo}
+                swapPanel = {props.swapPanel}
+              />
+            </div>
+            {provided.placeholder}
+          </div>
+        )}
+      </Draggable>
     )
   });
 

@@ -1,7 +1,6 @@
 import React from 'react';
+import { DragDropContext } from 'react-beautiful-dnd'; //remove?
 import TodoPanel from './TodoPanel';
-
-//let id = 0;
 
 class TodoApp extends React.Component {
 
@@ -15,6 +14,15 @@ class TodoApp extends React.Component {
     this.handleCheckbox = this.handleCheckbox.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
     this.swapPanel = this.swapPanel.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
+  }
+
+  onDragEnd(result) {
+    // dropped outside a droppable zone
+    if (!result.destination) {
+      return;
+    }
+    alert("source: " + result.source.index + " dest: " + result.destination.index);
   }
 
 	updateLocalStorage() {
@@ -117,7 +125,12 @@ class TodoApp extends React.Component {
   render() {
     const panelNode = this.renderPanels()
     return (
-      <ul className = "todo-app">{panelNode}</ul>
+      <DragDropContext
+        onDragStart={this.onDragStart}
+        onDragEnd={this.onDragEnd}
+      >
+        <ul className = "todo-app">{panelNode}</ul>
+      </DragDropContext>
     );
   }
 }
