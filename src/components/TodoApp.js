@@ -6,7 +6,7 @@ class TodoApp extends React.Component {
 
   constructor(props){
     super(props);
-    const localData = JSON.parse(localStorage.getItem("todos"));
+    const localData = JSON.parse(localStorage.getItem("data"));
     this.state = {
       data: localData || {
         "panels": [
@@ -15,29 +15,11 @@ class TodoApp extends React.Component {
             "lists": [
               {
                 "id": 0,
-                "todos": [
-                  { "id": 0,
-                    "text": "todo #0",
-                    "isComplete": 1
-                  },
-                  { "id": 1,
-                    "text": "todo #1",
-                    "isComplete": 1
-                  }
-                ]
+                "todos": []
               },
               {
                 "id": 1,
-                "todos": [
-                  { "id": 2,
-                    "text": "todo #2",
-                    "isComplete": 1
-                  },
-                  { "id": 3,
-                    "text": "todo #3",
-                    "isComplete": 1
-                  }
-                ]
+                "todos": []
               }
             ]
           },
@@ -46,29 +28,11 @@ class TodoApp extends React.Component {
             "lists": [
               {
                 "id": 2,
-                "todos": [
-                  { "id": 4,
-                    "text": "todo #4",
-                    "isComplete": 1
-                  },
-                  { "id": 5,
-                    "text": "todo #5",
-                    "isComplete": 1
-                  }
-                ]
+                "todos": []
               },
               {
                 "id": 3,
-                "todos": [
-                  { "id": 6,
-                    "text": "todo #6",
-                    "isComplete": 1
-                  },
-                  { "id": 7,
-                    "text": "todo #7",
-                    "isComplete": 1
-                  }
-                ]
+                "todos": []
               }
             ]
           }
@@ -115,7 +79,7 @@ class TodoApp extends React.Component {
 
 	updateLocalStorage() {
 		if (typeof(Storage) !== "undefined")
-			localStorage.setItem("todos", JSON.stringify(this.state.data));
+			localStorage.setItem("data", JSON.stringify(this.state.data));
   }
 
   addTodo(val, panel) {
@@ -206,7 +170,7 @@ class TodoApp extends React.Component {
 
   componentDidMount() {
 		if (typeof(Storage) !== "undefined") {
-			localStorage.setItem("todos", JSON.stringify(this.state.data));
+			localStorage.setItem("data", JSON.stringify(this.state.data));
       if(!localStorage.getItem("count")) {
         localStorage.setItem("count", "8");
       }
