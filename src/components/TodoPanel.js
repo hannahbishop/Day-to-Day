@@ -28,7 +28,7 @@ const TodoPanel = props => {
   }
   const viewNode = props.lists.map((list, i) => {
     return(
-      <Droppable droppableId={list.id.toString()}>
+      <Droppable droppableId={props.id.toString() + " " + list.id.toString()}>
         {(provided, snapshot) => (
           <div ref={provided.innerRef}>
             <TodoList

@@ -87,7 +87,29 @@ class TodoApp extends React.Component {
     if (!result.destination) {
       return;
     }
-    //alert("source: " + result.source.index + " dest: " + result.destination.index);
+    if (result.source.droppableId === result.destination.droppableId) {
+      let [panelId, listId] = result.source.droppableId
+        .split(" ")
+          .map(str => parseInt(str));
+      this.state.data.panels[panelId].lists.forEach((list, i) => {
+        if (list.id === listId) {
+          const [removed] = this.state.data.panels[panelId].lists[i].todos.splice(result.source.index,1);
+          this.state.data.panels[panelId].lists[i].todos.splice(result.destination.index, 0, removed);
+          this.setState(
+            {data: this.state.data}, 
+            () => {this.updateLocalStorage();}
+          );
+        }
+      });
+    }
+  }
+
+  reorder(list, startIndex, endIndex) {
+    const result = Array.from(list);
+    const [removed] = result.todos.splice(startIndex, 1);
+    result.todos.splice(endIndex, 0, removed);
+
+    return list;
   }
 
 	updateLocalStorage() {

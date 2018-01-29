@@ -21,13 +21,27 @@ const TodoList = (props) => {
   const swapPanel = (todoId) => {
     props.swapPanel(todoId, props.index)
   };
+  const getItemStyle = (draggableStyle, isDragging) => ({
+    userSelect: 'none',
+    margin: `0 0 1rem 0`,
+    
+    // change background colour if dragging
+    background: isDragging ? 'lightgreen' : 'grey',
+    
+    // styles we need to apply on draggables
+    ...draggableStyle
+  });
   const todoNode = props.todos.map((todo, i) => {
     return (
       <Draggable draggableId={todo.id.toString()} key={todo.id} index={i}> 
         {(provided, snapshot) => (
-          <div>
-            <div
+          <div class="margin-1">
+            <div class="margin-2"
               ref={provided.innerRef}
+              style={getItemStyle(
+                provided.draggableStyle,
+                snapshot.isDragging
+              )}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
             >
