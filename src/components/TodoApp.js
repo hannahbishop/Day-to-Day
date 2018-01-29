@@ -172,11 +172,11 @@ class TodoApp extends React.Component {
 		if (typeof(Storage) !== "undefined") {
 			localStorage.setItem("data", JSON.stringify(this.state.data));
       if(!localStorage.getItem("count")) {
-        localStorage.setItem("count", "8");
+        localStorage.setItem("count", "0");
       }
 		} else {
 			 console.log("App will not remember todos between sessions");
-			window.id = 8;
+			window.id = 0;
 		}
   }
 
