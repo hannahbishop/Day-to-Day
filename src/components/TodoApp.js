@@ -87,22 +87,40 @@ class TodoApp extends React.Component {
     if (!result.destination) {
       return;
     }
-    if (result.source.droppableId === result.destination.droppableId) {
-      let [panelId, listId] = result.source.droppableId
-        .split(" ")
-          .map(str => parseInt(str));
-      this.state.data.panels[panelId].lists.forEach((list, i) => {
-        if (list.id === listId) {
-          const [removed] = this.state.data.panels[panelId].lists[i].todos.splice(result.source.index,1);
-          this.state.data.panels[panelId].lists[i].todos.splice(result.destination.index, 0, removed);
-          this.setState(
-            {data: this.state.data}, 
-            () => {this.updateLocalStorage();}
-          );
+    let [indexStartPanel, idStartList] = result.source.droppableId
+      .split(" ")
+        .map(str => parseInt(str, 10));
+    let [indexDestPanel, idDestList] = result.destination.droppableId
+      .split(" ")
+        .map(str => parseInt(str, 10));
+    let sPanel = this.state.data.panels[indexStartPanel];
+    let dPanel = this.state.data.panels[indexDestPanel];
+    const removed = sPanel.lists
+      .filter(list => list.id === idStartList)
+        .map((list, i) => {
+          return list.todos.splice(result.source.index,1);
         }
-      });
-    }
+    );
+    dPanel.lists
+      .filter(list => list.id === idDestList)
+        .forEach((list, i) => {
+          list.todos.splice(result.destination.index, 0, removed[0][0]);
+        }
+    );
+    this.setState(
+      {data: this.state.data}, 
+      () => {this.updateLocalStorage();}
+    );
   }
+
+  /*
+  const [removed] = this.state.data.panels[panelId].lists[i].todos.splice(result.source.index,1);
+        this.state.data.panels[panelId].lists[i].todos.splice(result.destination.index, 0, removed);
+        this.setState(
+          {data: this.state.data}, 
+          () => {this.updateLocalStorage();}
+        );
+*/
 
   reorder(list, startIndex, endIndex) {
     const result = Array.from(list);
