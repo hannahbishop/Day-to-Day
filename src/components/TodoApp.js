@@ -1,85 +1,72 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { DragDropContext } from 'react-beautiful-dnd'; //remove?
 import TodoPanel from './TodoPanel';
 
-class TodoApp extends React.Component {
+class TodoApp extends Component {
 
   constructor(props){
     super(props);
-    const localData = JSON.parse(localStorage.getItem("data"));
+    const localData = JSON.parse(localStorage.getItem("todos"));
     this.state = {
-      data: localData || {
-        "panels": [
-          {
-            "id": 0,
-            "lists": [
-              {
-                "id": 0,
-                "todos": []
-              },
-              {
-                "id": 1,
-                "todos": []
-              }
-            ]
-          },
-          {
-            "id": 1,
-            "lists": [
-              {
-                "id": 2,
-                "todos": []
-              },
-              {
-                "id": 3,
-                "todos": []
-              }
-            ]
-          }
-        ]
-      }
+      todos: localData || []
     };
     this.addTodo = this.addTodo.bind(this);
     this.handleCheckbox = this.handleCheckbox.bind(this);
     this.removeTodo = this.removeTodo.bind(this);
-    this.swapPanel = this.swapPanel.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   onDragEnd(result) {
-    // dropped outside a droppable zone
     if (!result.destination) {
       return;
     }
-    let [indexStartPanel, idStartList] = result.source.droppableId
-      .split(" ")
-        .map(str => parseInt(str, 10));
-    let [indexDestPanel, idDestList] = result.destination.droppableId
-      .split(" ")
-        .map(str => parseInt(str, 10));
-    let sPanel = this.state.data.panels[indexStartPanel];
-    let dPanel = this.state.data.panels[indexDestPanel];
-    const removed = sPanel.lists
-      .filter(list => list.id === idStartList)
-        .map((list, i) => {
-          return list.todos.splice(result.source.index,1);
-        }
-    );
-    dPanel.lists
-      .filter(list => list.id === idDestList)
-        .forEach((list, i) => {
-          list.todos.splice(result.destination.index, 0, removed[0][0]);
-        }
-    );
+    //tokenize the droppable IDs
+    let [pIDStart, lIDStart] = result.source.droppableId
+      .split(" ").map(str => parseInt(str, 10));
+    let [pIDDest, lIDDest] = result.destination.droppableId
+      .split(" ").map(str => parseInt(str, 10));
+    const lStart = [];
+    const lDest = [];
+    const remaining = [];
+    //make a copy of state, and filter todos based on location
+    this.state.todos.slice().forEach((todo, i) => {
+      if (
+        (todo.panel === pIDStart) &&
+        (+todo.isComplete === lIDStart)
+      ) {
+        lStart.push(todo);
+      }
+      else if (
+        //don't want to create a separate destination list if todos are moved within the same droppable
+        (result.source.droppableId !== result.destination.droppableId) &&
+        (todo.panel === pIDDest) &&
+        (+todo.isComplete === lIDDest)
+      ) {
+        lDest.push(todo);
+      } else {
+        remaining.push(todo);
+      }
+    });
+    //reorder todos
+    const [moved] = lStart.splice(result.source.index, 1);
+    moved.panel = pIDDest;
+    moved.isComplete = lIDDest;
+    if (result.source.droppableId !== result.destination.droppableId) {
+      lDest.splice(result.destination.index, 0, moved);
+    } else {
+      lStart.splice(result.destination.index, 0, moved);
+    }
+    //stitch back together and set state
+    const newTodos = [...lStart, ...lDest, ...remaining];
     this.setState(
-      {data: this.state.data}, 
+      {todos: newTodos}, 
       () => {this.updateLocalStorage();}
     );
   }
 
 	updateLocalStorage() {
 		if (typeof(Storage) !== "undefined")
-			localStorage.setItem("data", JSON.stringify(this.state.data));
+			localStorage.setItem("todos", JSON.stringify(this.state.todos));
   }
 
   addTodo(val, panel) {
@@ -91,13 +78,13 @@ class TodoApp extends React.Component {
         id = window.id;
       }
       const todo = {
+        id: id,
         text: val,
-        isComplete: 0,
-        id: id
+        isComplete: false,
+        panel: panel
       }
-      this.state.data.panels[panel].lists[0].todos.unshift(todo);
       this.setState(
-        {data: this.state.data}, 
+        {todos: [todo, ...this.state.todos]}, 
         () => {this.updateLocalStorage();}
       );
       if (typeof(Storage) !== "undefined") {
@@ -109,68 +96,51 @@ class TodoApp extends React.Component {
     }
   }
 
-  removeTodo(todoId, list, panel) {
-    const remaining = this.state.data.panels[panel].lists[list].todos
-      .filter(todo => todo.id !== todoId);
-    this.state.data.panels[panel].lists[list].todos = remaining;
+  removeTodo(id) {
+    const remaining = this.state.todos
+      .filter(todo => todo.id !== id);
     this.setState(
-      {data: this.state.data}, 
+      {todos: remaining}, 
       () => {this.updateLocalStorage();}
     );
   }
 
-  handleCheckbox(id) {
-    let toAdd = [];
-    toAdd = this.state.data.filter(todo => todo.id === id);
-    toAdd.forEach((todo) => {
-      todo.isComplete = !todo.isComplete;
-      this.state.data
-        .splice(0, 0, this.state.data
-          .splice(this.state.data.indexOf(todo), 1)[0]);
-      this.setState(
-        {data: this.state.data}, 
-        () => (this.updateLocalStorage())
-      );
+  handleCheckbox(id, panel) {
+    const copyData = this.state.todos.slice();
+    copyData.forEach((todo, i) => {
+      if (todo.id === id) {
+        const [todoMatch] = copyData.splice(i, 1);
+        todoMatch.isComplete = !todoMatch.isComplete;
+        copyData.splice(0, 0, todoMatch);
+      }
     });
-  }
-
-  swapPanel(todoId, list, panel) {
-    const newTodo = this.state.data.panels[panel].lists[list].todos
-      .filter(todo => todo.id === todoId)[0];
-
-    //add to new panel
-    this.state.data.panels[1-panel].lists[list].todos
-      .unshift(newTodo);
-
-    //remove from panel
-    const remaining = this.state.data.panels[panel].lists[list].todos
-      .filter(todo => todo.id !== todoId);
-    this.state.data.panels[panel].lists[list].todos = remaining;
-
     this.setState(
-      {data: this.state.data}, 
-      () => {this.updateLocalStorage()}
+      {todos: copyData}, 
+      () => {this.updateLocalStorage();}
     );
   }
 
   renderPanels() {
-    return this.state.data.panels.map((panel, i) => (
-        <li className = "todo-panel">
+    const panels = [];
+    [0,1].forEach((i) => {
+      panels.push (
+        <li key = {i} className = "todo-panel">
           <TodoPanel
-            lists = {this.state.data.panels[i].lists}
             id = {i}
+            todos = {this.state.todos.filter(todo => todo.panel === i)}
             addTodo = {this.addTodo}
             handleCheckbox = {this.handleCheckbox}
             removeTodo = {this.removeTodo}
-            swapPanel = {this.swapPanel}
           />
-        </li>
-      ));
+      </li>
+      )
+    });
+    return panels;
   }
 
   componentDidMount() {
 		if (typeof(Storage) !== "undefined") {
-			localStorage.setItem("data", JSON.stringify(this.state.data));
+			localStorage.setItem("todos", JSON.stringify(this.state.todos));
       if(!localStorage.getItem("count")) {
         localStorage.setItem("count", "0");
       }

@@ -8,19 +8,9 @@ const propTypes = {
   todos: PropTypes.array.isRequired,
   removeTodo: PropTypes.func.isRequired,
   handleCheckbox: PropTypes.func.isRequired,
-  swapPanel: PropTypes.func.isRequired
 };
 
 const TodoList = (props) => {
-  const removeTodo = (todoId) => {
-    props.removeTodo(todoId, props.index)
-  };
-  const handleCheckbox = (todoId) => {
-    props.handleCheckbox(todoId, props.index)
-  };
-  const swapPanel = (todoId) => {
-    props.swapPanel(todoId, props.index)
-  };
   const getItemStyle = (draggableStyle, isDragging) => ({
     userSelect: 'none',
     margin: `0 0 1rem 0`,
@@ -35,8 +25,8 @@ const TodoList = (props) => {
     return (
       <Draggable draggableId={todo.id.toString()} key={todo.id} index={i}> 
         {(provided, snapshot) => (
-          <div class="margin-1">
-            <div class="margin-2"
+          <div>
+            <div
               ref={provided.innerRef}
               style={getItemStyle(
                 provided.draggableStyle,
@@ -47,9 +37,8 @@ const TodoList = (props) => {
             >
               <TodoCard
                 todo = {todo}
-                handleCheckbox = {handleCheckbox}
-                removeTodo = {removeTodo}
-                swapPanel = {swapPanel}
+                handleCheckbox = {props.handleCheckbox}
+                removeTodo = {props.removeTodo}
               />
             </div>
             {provided.placeholder}
