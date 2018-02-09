@@ -5,6 +5,7 @@ import TodoForm from './TodoForm';
 import PropTypes from 'prop-types';
 
 const propTypes = {
+  title: PropTypes.string,
   todos: PropTypes.array.isRequired,
   id: PropTypes.number.isRequired,
   addTodo: PropTypes.func.isRequired,
@@ -13,23 +14,35 @@ const propTypes = {
 };
 
 const TodoPanel = props => {
+  const getListStyle = (isDraggingOver) => ({
+    padding: '1rem 1rem 1rem 1rem',
+    minHeight: '4rem',
+  });
+
   const lists = [];
   [0,1].forEach((i) => {
     lists.push(
-      <Droppable key={i} droppableId={props.id.toString() + " " + i.toString()}>
-        {(provided, snapshot) => (
-          <div ref={provided.innerRef}>
-            <TodoList
-              className = "todo-list"
-              todos = {props.todos.filter(todo => +todo.isComplete === i)}
-              index = {i}
-              handleCheckbox = {props.handleCheckbox}
-              removeTodo = {props.removeTodo}
-            />
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+      <li 
+        key = {i}
+        className = {
+          "todo-list " +
+          (i ? "todo-list--complete" : "todo-list--incomplete" )} 
+      >
+        <Droppable
+          droppableId={props.id.toString() + " " + i.toString()}>
+          {(provided, snapshot) => (
+            <div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)}>
+              <TodoList
+                todos = {props.todos.filter(todo => +todo.isComplete === i)}
+                index = {i}
+                handleCheckbox = {props.handleCheckbox}
+                removeTodo = {props.removeTodo}
+              />
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable> 
+      </li>
     )
   });
 
@@ -39,7 +52,7 @@ const TodoPanel = props => {
         addTodo = {props.addTodo}
         panel = {props.id}
       />
-      <div className = "todo-list__view">{lists}</div>
+      <ul className = "todo-list__view">{lists}</ul>
     </div>
   )
 };

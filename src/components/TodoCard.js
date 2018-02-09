@@ -16,12 +16,7 @@ const TodoCard = (props) => {
     props.removeTodo(props.todo.id)
   };
   return(
-    <li
-      className = {
-        "todo__card " +
-        (isComplete ? "todo--complete" : "todo--incomplete" )
-      }
-    >
+    <div>
       <button
         className = {
           "todo__check " +
@@ -33,7 +28,7 @@ const TodoCard = (props) => {
       <button
         className = "todo__delete"
         onClick = {removeTodo}>X</button>
-    </li>
+    </div>
   )
 }
 

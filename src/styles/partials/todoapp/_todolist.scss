@@ -6,6 +6,10 @@
 }
 
 .todo-list--incomplete {
-    margin-bottom: 4rem;
+    //margin-bottom: 4rem;
     flex: 1 0 auto;
+}
+
+.todo-list--complete {
+    opacity: 0.5;
 }

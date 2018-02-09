@@ -127,6 +127,7 @@ class TodoApp extends Component {
         <li key = {i} className = "todo-panel">
           <TodoPanel
             id = {i}
+            title = {i ? "Today" : "Later"}
             todos = {this.state.todos.filter(todo => todo.panel === i)}
             addTodo = {this.addTodo}
             handleCheckbox = {this.handleCheckbox}

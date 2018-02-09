@@ -4,36 +4,46 @@ import PropTypes from 'prop-types';
 import { Draggable } from 'react-beautiful-dnd';
 
 const propTypes = {
-  className: PropTypes.string.isRequired,
   todos: PropTypes.array.isRequired,
   removeTodo: PropTypes.func.isRequired,
   handleCheckbox: PropTypes.func.isRequired,
 };
 
 const TodoList = (props) => {
-  const getItemStyle = (draggableStyle, isDragging) => ({
-    userSelect: 'none',
-    margin: `0 0 1rem 0`,
+  const getItemStyle = (isDragging, draggableStyle) => {
+    return ({
+      userSelect: 'none',
+      padding: '2rem',
+      margin: `0 0 1rem 0`,
+      border: 'solid 1px black',
+      borderRadius: '3px',
+      background: 'white',
     
-    // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'grey',
-    
-    // styles we need to apply on draggables
-    ...draggableStyle
-  });
+      // change box shadow if dragging
+      boxShadow: isDragging ? "3px 3px 3px grey" : "",
+      // styles we need to apply on draggables
+      ...draggableStyle,
+    })
+  };
   const todoNode = props.todos.map((todo, i) => {
     return (
-      <Draggable draggableId={todo.id.toString()} key={todo.id} index={i}> 
+      <Draggable
+        className = {
+          "todo__card " +
+          (todo.isComplete ? "todo--complete" : "todo--incomplete" )
+        }
+        draggableId={todo.id.toString()} key={todo.id} index={i}
+      > 
         {(provided, snapshot) => (
           <div>
             <div
               ref={provided.innerRef}
-              style={getItemStyle(
-                provided.draggableStyle,
-                snapshot.isDragging
-              )}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
+              style={getItemStyle(
+                snapshot.isDragging,
+                provided.draggableProps.style
+              )}
             >
               <TodoCard
                 todo = {todo}
@@ -49,7 +59,7 @@ const TodoList = (props) => {
   });
 
   return (
-    <ul className={props.className}>{todoNode}</ul>
+    <div className={props.className}>{todoNode}</div>
   );
 };
 
